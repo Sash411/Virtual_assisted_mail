@@ -1,0 +1,97 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+<body onmousedown="enablePostRequest(event)">
+  <section class="vh-150" style="background-color: aqua;">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-xl-10">
+          <div class="card" style="border-radius: 1rem;">
+            <div class="row g-0">
+
+              <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                <div class="card-body p-4 p-lg-5 text-black">
+
+                  <form action="{% url 'client:register' %}" method="post">
+
+                    <div class="d-flex align-items-center mb-3 pb-1">
+                      <span class="h1 fw-bold mb-0">Voice based Email</span>
+                    </div>
+
+                    <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Register your account</h5>
+                    <div id="here">
+                      <script>
+                        $(document).ready(function () {
+                          setInterval(function () {
+                            $("#here").load(window.location.href + " #here");
+                          }, 1000);
+                        });
+                      </script>
+                      {% csrf_token %}
+                      <div class="form-outline mb-4">
+                        <label class="form-label" for="form2Example17">Email</label>
+                        <input type="email" id="form2Example17" class="form-control form-control-lg" placeholder="Email"
+                          name="email" required value="{{ detail.email }}" />
+                      </div>
+                      <div class="form-outline mb-4">
+                        <label class="form-label" for="form2Example27">App Password</label>
+                        <input type="password" id="form2Example27" class="form-control form-control-lg"
+                          placeholder="App Password" name="app_password" required value="{{ detail.app_password }}" />
+                      </div>
+                      <div class="form-outline mb-4">
+                        <label class="form-label" for="form2Example28">New Password</label>
+                        <input type="password" id="form2Example28" class="form-control form-control-lg"
+                          placeholder="New Password" name="new_password" required value="{{ detail.new_password }}" />
+
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <label class="form-label" for="form2Example29">Confirm Password</label>
+                        <input type="password" id="form2Example29" class="form-control form-control-lg"
+                          placeholder="Confirm Password" name="confirm_password" required
+                          value="{{ detail.confirm_password }}" />
+
+                      </div>
+
+                      <input type="submit" class="btn btn-primary btn-xl rounded-pill mt-5" role="button"
+                        value="REGISTER" style="background-color: black;">
+                      <a href="{% url 'client:login' %}" class="btn btn-primary btn-xl rounded-pill mt-5" role="button"
+                        style="background-color: black;">Back to Login</a>
+                      <br><br>
+                      <p>For the first time, please ask an assistant to help set up your account by going to /register
+                        in the URL and entering your email and app password.</p>
+                      <br>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+
+    function enablePostRequest(event) {
+
+      $.ajax({
+        url: "{% url 'client:register' %}",
+        method: 'POST',
+        data: { 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+        success: function (data) {
+
+          if (data.result == 'success') {
+
+            window.location = "{% url 'client:options' %}";
+          }
+          else if (data.result == 'failure') {
+            window.location = "{% url 'client:register' %}";
+          }
+        }
+      });
+    }
+  </script>
+
+  {% endblock %}

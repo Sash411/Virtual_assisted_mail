@@ -1,0 +1,101 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+<style>
+  a,input,button{
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+    .container {
+        background-color: aqua;
+        max-width: 100%;
+    }
+
+    .card {
+        background-color: darkblue;
+    }
+
+    a {
+
+        margin-bottom: 7px;
+    }
+</style>
+
+<body onmousedown="enablePostOptions(event)">
+
+    <div class="container">
+        <div class="row align-items-center vh-100">
+            <div class="col-6 mx-auto">
+                <div class="card shadow border" style="width:auto; height: auto;">
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <p style="color:white;font-size: 25px;"> Menu Page</p>
+                        <a href="compose.html">
+                            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                            <input role="button" href="compose.html" class="btn btn-primary"
+                                style="font-size: 25px;margin-bottom: 6px;" value="Compose" type="submit">
+                        </a>
+                        <a href="inbox.html">
+                            <i class="fa fa-inbox" aria-hidden="true"></i>
+                            <input role="button" href="inbox.html" class="btn btn-primary"
+                                style="font-size: 25px;margin-bottom: 6px;" value="Inbox" type="submit">
+                        </a>
+                        <a href="draft.html">
+                            <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                            <input role="button" href="draft.html" class="btn btn-primary"
+                                style="font-size: 25px;margin-bottom: 6px;" value="Draft" type="submit">
+                        </a>
+                        <a href="sent.html">
+                            <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                            <input role="button" href="sent.html" class="btn btn-primary"
+                                style="font-size: 25px;margin-bottom: 6px;" value="Sent" type="submit">
+                        </a>
+                        <a href="trash.html">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                            <input role="button" href="trash.html" class="btn btn-primary"
+                                style="font-size: 25px;margin-bottom: 6px;" value="Trash" type="submit">
+                        </a>
+                        <a href="login.html">
+                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                            <input role="button" href="logout.html" class="btn btn-primary"
+                                style="font-size: 25px;margin-bottom: 6px;" value="Logout" type="submit">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function enablePostOptions(event) {
+            $.ajax({
+                url: "{% url 'client:options' %}",
+                method: 'POST',
+                data: { 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+                success: function (data) {
+                    if (data.result == 'compose') {
+                        window.location = "{% url 'client:compose' %}";
+                    }
+                    else if (data.result == 'sent') {
+                        window.location = "{% url 'client:sent' %}";
+                    }
+                    else if (data.result == 'inbox') {
+                        window.location = "{% url 'client:inbox' %}";
+                    }
+                    else if (data.result == 'draft') {
+                        window.location = "{% url 'client:draft' %}"
+                    }
+                    else if (data.result == 'trash') {
+                        window.location = "{% url 'client:trash' %}";
+                    }
+                    else if (data.result == 'logout') {
+                        window.location = "{% url 'client:login' %}";
+                    }
+                    else if (data.result == 'failure') {
+                        window.location = "{% url 'client:options' %}";
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+{% endblock %}

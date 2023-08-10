@@ -1,0 +1,94 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+<style>
+  a,input,button{
+    pointer-events: none;
+
+    cursor: not-allowed;
+  }
+</style>
+<body onmousedown="enablePostRequest(event)">
+  <section class="vh-170" style="background-color: aqua;">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-xl-10">
+          <div class="card" style="border-radius: 1rem;">
+            <div class="row g-0">
+              <div class="col-md-6 col-lg-5 d-none d-md-block">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
+                  alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+              </div>
+              <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                <div class="card-body p-4 p-lg-5 text-black">
+
+                  <form action="client/login.html" method="post">
+
+                    <div class="d-flex align-items-center mb-3 pb-1">
+                      <span class="h1 fw-bold mb-0">Voice based Email</span>
+                    </div>
+
+                    <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Log into your account</h5>
+                    <div id="here">
+                      <script>
+                        $(document).ready(function () {
+                          setInterval(function () {
+                            $("#here").load(window.location.href + " #here");
+                          }, 1000);
+                        });
+                      </script>
+                      {% csrf_token %}
+                      <div class="form-outline mb-4">
+                        <input type="email" id="form2Example17" class="form-control form-control-lg" placeholder="Email"
+                          name="email" required value={{detail.email}} />
+                        <label class="form-label" for="form2Example17">Email</label>
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <input type="password" id="form2Example27" class="form-control form-control-lg"
+                          placeholder="Password" name="password" required value={{detail.password}} />
+                        <label class="form-label" for="form2Example27">Password</label>
+                      </div>
+
+                      <a href="options.html">
+                        <input href="options.html" class="btn btn-primary btn-xl rounded-pill mt-5" role="button"
+                          type="submit" value="LOGIN" style="background-color: black;"></a>
+                      <br><br>
+                      <p> For first time , please a assistant help to setup his account by entering to /register in
+                        url and enter email and app password</p>
+                      <br>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+
+    function enablePostRequest(event) {
+
+      $.ajax({
+        url: "{% url 'client:login' %}",
+        method: 'POST',
+        data: { 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+        success: function (data) {
+
+          if (data.result == 'success') {
+
+            window.location = "{% url 'client:options' %}";
+          }
+          else if (data.result == 'failure') {
+            window.location = "{% url 'client:login' %}";
+          }
+        }
+      });
+    }
+  </script>
+
+
+
+  {% endblock %}
